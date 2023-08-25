@@ -141,3 +141,15 @@ curl --location 'https://svip.bljiex.cc/api.php?out=json&url=https://v.qq.com/x/
 ```
 https://dm.xbqgx.com/?url=https://vip.kuaikan-cdn2.com/20230819/sEapqxTv/index.m3u8
 ```
+
+
+###  在Git下创建一个空分支
+
+```shell
+git checkout --orphan gh-pages
+git rm -rf . 
+touch README.md
+git add .
+git commit -a -m "fresh and empty gh-pages branch"
+git push -u origin gh-pages
+```
