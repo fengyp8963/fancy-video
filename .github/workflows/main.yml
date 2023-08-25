@@ -1,0 +1,34 @@
+name: Main
+on:
+  workflow_dispatch: {}
+  push:
+    branches:
+      - main
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    # 步骤
+    steps:
+      - name: Checkout  ️
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+      - name: Use pnpm 8.6.0
+        uses: pnpm/action-setup@v2
+        with:
+          version: 8.6.0
+      - name: Use Node.js 16
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+          cache: pnpm
+      - name: Build
+        run: |
+          pnpm install --frozen-lockfile
+          pnpm build:h5
+      - name: Deploy # 部署
+        uses: JamesIves/github-pages-deploy-action@v4.3.3
+        with:
+          branch: gh-pages # 部署后提交到那个分支
+          folder: dist/build/h5 # 这里填打包好的目录名称
+          CNAME: video.fancy8963.cn # 域名映射
