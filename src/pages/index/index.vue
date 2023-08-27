@@ -4,13 +4,58 @@
 			<tm-input :searchWidth="120" placeholder="请输入内容" @search="search" prefix="tmicon-search"
 				searchLabel="搜索"></tm-input>
 		</tm-sheet>
-		<view v-for="item in data" :key="item.id">
-			<tm-divider :border="0" :margin="[12, 12]"></tm-divider>
-			<tm-sheet :margin="[0, 0, 0, 0]">
-				<tm-text _class="text-overflow-1" :label="item.title + ' ' + item.flag_name"
-					@click="detail(item)"></tm-text>
-			</tm-sheet>
+
+		<tm-divider :border="0" :margin="[12, 12]"></tm-divider>
+
+		<view v-if="type">
+			<tm-spin :load="load" tip="加载中" style="min-height: 200rpx">
+				<tm-sheet :margin="[0, 0, 0, 0]">
+					<tm-text _class="text-overflow-1" label="热门"></tm-text>
+				</tm-sheet>
+				<tm-divider :border="0" :margin="[12, 12]"></tm-divider>
+				<view class="flex flex-row flex-wrap">
+					<view v-for="item in hots" :key="item.name">
+						<tm-button color="blue" :width="350" :margin="[10]" :shadow="0" size="small" :label="item.name"
+							@click="search(item.name)">
+						</tm-button>
+					</view>
+				</view>
+
+				<tm-divider :border="0" :margin="[12, 12]"></tm-divider>
+
+				<tm-sheet :margin="[0, 0, 0, 0]">
+					<tm-text _class="text-overflow-1" label="最新"></tm-text>
+				</tm-sheet>
+				<tm-divider :border="0" :margin="[12, 12]"></tm-divider>
+
+				<view class="flex flex-row flex-wrap">
+					<view v-for="item in news" :key="item.name">
+						<tm-button color="blue" :width="350" :margin="[10]" :shadow="0" size="small" :label="item.name"
+							@click="search(item.name)">
+						</tm-button>
+					</view>
+				</view>
+			</tm-spin>
 		</view>
+
+		<view v-if="!type">
+			<tm-spin :load="load" tip="加载中" style="min-height: 200rpx">
+				<tm-sheet :margin="[0, 0, 0, 0]">
+					<tm-text _class="text-overflow-1" label="查询"></tm-text>
+				</tm-sheet>
+				<tm-divider :border="0" :margin="[12, 12]"></tm-divider>
+				<view class="flex flex-row flex-wrap">
+					<view v-for="item in data" :key="item.name">
+						<tm-button color="blue" :width="726" :margin="[10]" :shadow="0" size="small"
+							:label="item.title + ' [' + item.type + ']' + ' [' + item.from + ']'" @click="detail(item)">
+						</tm-button>
+					</view>
+				</view>
+			</tm-spin>
+		</view>
+
+		<tm-divider :border="0" :margin="[12, 12]"></tm-divider>
+
 	</tm-app>
 </template>
 <script lang="ts" setup>
@@ -21,15 +66,20 @@ import tmSheet from "@/tmui/components/tm-sheet/tm-sheet.vue";
 import tmInput from "@/tmui/components/tm-input/tm-input.vue";
 import tmText from "@/tmui/components/tm-text/tm-text.vue";
 
-const search = (val: any) => {
-	if (!val) return;
+const type = ref(true);
+
+const load = ref(true);
+const hots = ref([] as any);
+const news = ref([] as any);
+
+const loaded = () => {
 	uni.$tm.fetch
-		.get("/api/api.php?out=json&wd=" + val)
+		.get("/api2/api/v/")
 		.then((res: any) => {
-			console.log(res);
-			if (res.data?.success) {
-				data.value = res.data?.info;
-			}
+			hots.value = res.data.hot;
+			news.value = res.data.new;
+			load.value = false;
+			type.value = true;
 		}).catch((res: any) => {
 			uni.showToast({
 				title: '查询失败，请稍后再试！',
@@ -37,17 +87,38 @@ const search = (val: any) => {
 				mask: true,
 				duration: 1000,
 			});
+			load.value = false;
 		});
 }
+loaded();
 
-const data = ref([
-	{
-		id: 1,
-		title: "",
-		flag: 1,
-		flag_name: ""
-	},
-]);
+const data = ref([] as any);
+
+const search = (val: any) => {
+	load.value = true;
+	if (!val) {
+		loaded();
+		return
+	};
+	uni.$tm.fetch
+		.get("/api1/api.php?out=json&wd=" + val)
+		.then((res: any) => {
+			console.log(res);
+			if (res.data?.success) {
+				data.value = res.data?.info;
+				type.value = false;
+			}
+			load.value = false;
+		}).catch((res: any) => {
+			uni.showToast({
+				title: '查询失败，请稍后再试！',
+				icon: 'none',
+				mask: true,
+				duration: 1000,
+			});
+			load.value = false;
+		});
+}
 
 const detail = (item: any) => {
 	uni.navigateTo({
@@ -57,7 +128,3 @@ const detail = (item: any) => {
 
 </script>
 <style lang="scss" scoped></style>
-
-
-假定， 已确定的指标： 发电量、用电量、上网电量、购买电量；
-基于上述的4个确定的指标，计算或累加得到的指标：发电量（日|月|年|总）、自发自用、自给自主、收益等等 

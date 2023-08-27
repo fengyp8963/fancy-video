@@ -3,8 +3,8 @@
     <tm-spin :load="load" tip="加载中" style="min-height: 200rpx">
       <tm-sheet :margin="[0, 0]" :padding="[0, 0]">
         <!-- <tm-image src="https://picsum.photos/620/150" :width="636" :height="150"></tm-image> -->
-        <iframe v-if="currentUrl.param" id="iframe" :src="currentUrl.url + currentUrl.param" style="border: none" frameborder="0"
-          scrolling="no"></iframe>
+        <iframe v-if="currentUrl.param" id="iframe" :src="currentUrl.url + currentUrl.param"
+          style="border: none; min-height: 400rpx" frameborder="0" scrolling="no"></iframe>
       </tm-sheet>
       <tm-sheet :margin="[0, 0, 0, 0]">
         <tm-text :font-size="24" _class="text-weight-b" :label="title"></tm-text>
@@ -41,7 +41,7 @@ onLoad((opt: any) => {
 
 const getInfo = (opt: any) => {
   uni.$tm.fetch
-    .get("/api/api.php?out=json&flag=" + opt.flag + "&id=" + opt.id)
+    .get("/api1/api.php?out=json&flag=" + opt.flag + "&id=" + opt.id)
     .then((res: any) => {
       if (res.data?.success) {
         title.value = res.data.title;
