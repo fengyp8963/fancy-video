@@ -14,7 +14,7 @@
 				</tm-sheet>
 				<tm-divider :border="0" :margin="[12, 12]"></tm-divider>
 				<view class="flex flex-row flex-wrap">
-					<view v-for="item in hots" :key="item.name">
+					<view v-for="(item, index) in  hots" :key="index">
 						<tm-button color="blue" :width="350" :margin="[10]" :shadow="0" size="small" :label="item.name"
 							@click="search(item.name)">
 						</tm-button>
@@ -29,7 +29,7 @@
 				<tm-divider :border="0" :margin="[12, 12]"></tm-divider>
 
 				<view class="flex flex-row flex-wrap">
-					<view v-for="item in news" :key="item.name">
+					<view v-for="(item, index) in news" :key="index">
 						<tm-button color="blue" :width="350" :margin="[10]" :shadow="0" size="small" :label="item.name"
 							@click="search(item.name)">
 						</tm-button>
@@ -45,7 +45,7 @@
 				</tm-sheet>
 				<tm-divider :border="0" :margin="[12, 12]"></tm-divider>
 				<view class="flex flex-row flex-wrap">
-					<view v-for="item in data" :key="item.name">
+					<view v-for="(item, index) in data" :key="index">
 						<tm-button color="blue" :width="726" :margin="[10]" :shadow="0" size="small"
 							:label="item.title + ' [' + item.type + ']' + ' [' + item.from + ']'" @click="detail(item)">
 						</tm-button>
@@ -74,7 +74,7 @@ const news = ref([] as any);
 
 const loaded = () => {
 	uni.$tm.fetch
-		.get("/api2/api/v/")
+		.get("http://api.fancy8963.cn/api2/api/v/")
 		.then((res: any) => {
 			hots.value = res.data.hot;
 			news.value = res.data.new;
@@ -101,7 +101,7 @@ const search = (val: any) => {
 		return
 	};
 	uni.$tm.fetch
-		.get("/api1/api.php?out=json&wd=" + val)
+		.get("http://api.fancy8963.cn/api1/api.php?out=json&wd=" + val)
 		.then((res: any) => {
 			console.log(res);
 			if (res.data?.success) {
