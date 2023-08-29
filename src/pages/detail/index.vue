@@ -42,7 +42,7 @@ onLoad((opt: any) => {
 
 const getInfo = (opt: any) => {
   uni.$tm.fetch
-    .get("http:/114.55.175.146/api1/api.php?out=json&flag=" + opt.flag + "&id=" + opt.id)
+    .get("http://114.55.175.146/api1/api.php?out=json&flag=" + opt.flag + "&id=" + opt.id)
     .then((res: any) => {
       if (res.data?.success) {
         title.value = res.data.title;
