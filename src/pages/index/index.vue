@@ -74,7 +74,7 @@ const news = ref([] as any);
 
 const loaded = () => {
 	uni.$tm.fetch
-		.get("http://api.fancy8963.cn/api2/api/v/")
+		.get("http:/114.55.175.146/api2/api/v/")
 		.then((res: any) => {
 			hots.value = res.data.hot;
 			news.value = res.data.new;
@@ -101,7 +101,7 @@ const search = (val: any) => {
 		return
 	};
 	uni.$tm.fetch
-		.get("http://api.fancy8963.cn/api1/api.php?out=json&wd=" + val)
+		.get("http:/114.55.175.146/api1/api.php?out=json&wd=" + val)
 		.then((res: any) => {
 			console.log(res);
 			if (res.data?.success) {
