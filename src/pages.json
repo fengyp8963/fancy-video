@@ -10,9 +10,11 @@
 			"path": "pages/index/index",
 			"style": {
 				"navigationBarTitleText": "首页",
-				"navigationStyle": "custom",
 				"titlePenetrate": "YES",
-				"transparentTitle": "always"
+				"transparentTitle": "always",
+				"app-plus": {
+					"bounce": "none"
+				}
 			}
 		},
 		{

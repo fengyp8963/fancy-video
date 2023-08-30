@@ -7,7 +7,7 @@
           style="border: none; min-height: 400rpx" frameborder="0" scrolling="no"></iframe>
       </tm-sheet>
     </tm-spin>
-    <tm-sheet v-if="!load" :margin="[0, 0, 0, 0]">
+    <tm-sheet v-if="conented" :margin="[0, 0, 0, 0]">
       <tm-text :font-size="24" _class="text-weight-b" :label="title"></tm-text>
       <tm-divider :border="0" :margin="[6, 6]"></tm-divider>
       <view class="flex flex-row flex-wrap">
@@ -32,6 +32,7 @@ import tmDivider from "../../tmui/components/tm-divider/tm-divider.vue";
 
 const { proxy } = getCurrentInstance();
 const load = ref(true);
+const conented = ref(false);
 const title = ref('');
 const currentUrl = ref();
 const data = ref([] as any);
@@ -50,6 +51,7 @@ const getInfo = (opt: any) => {
         data.value = res.data?.info[0]?.video.map((item: any) => { return { id: item.split('$')[0], url: item.split('$')[1], selected: false } });
         data.value[0].selected = true;
         load.value = false;
+        conented.value = true;
       }
     }).catch((res: any) => {
       uni.showToast({
